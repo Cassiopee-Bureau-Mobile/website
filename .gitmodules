@@ -1,0 +1,6 @@
+[submodule "ansible/ansible-jupyterhub"]
+	path = ansible/ansible-jupyterhub
+	url = https://github.com/Cassiopee-Bureau-Mobile/ansible-jupyterhub.git
+[submodule "ansible/ansible-openvpn"]
+	path = ansible/ansible-openvpn
+	url = https://github.com/Cassiopee-Bureau-Mobile/ansible-openvpn.git
