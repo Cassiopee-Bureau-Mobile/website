@@ -1,7 +1,7 @@
-// Path: src/pages/api/services/openvpn/hosts.ts
+// Path: src/pages/api/services/jupyterhub/hosts.ts
 import { logger } from '@/lib/logger';
 import { verify } from '@/utils/auth';
-import { getOpenVPNHosts, setOpenVPNHosts } from '@/utils/executor';
+import { getJupyterHubHosts, setJupyterHubHosts } from '@/utils/executor';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { z } from 'zod';
 
@@ -28,31 +28,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 }
 
-// POST write OpenVPN host file
+// POST write jupyterhub host file
 export async function POST(req: NextApiRequest, res: NextApiResponse) {
-    logger.info('POST /api/services/openvpn/hosts');
+    logger.info('POST /api/services/jupyterhub/hosts');
 
     try {
-        const result = hostVarsSchema.safeParse(req.body);
+        const result = hostVarsSchema.safeParse(JSON.parse(req.body));
 
         if (!result.success) {
             return res.status(400).json({ error: result.error });
         }
 
-        await setOpenVPNHosts(result.data);
+        await setJupyterHubHosts(result.data);
 
-        return res.json({ message: 'OpenVPN hosts file written' });
+        return res.json({ message: 'JupyterHub hosts file written' });
     } catch (error: any) {
         return res.status(500).json({ error: error.message });
     }
 }
 
-// GET infos of the OpenVPN host file
+// GET infos of the jupyterhub host file
 async function GET(req: NextApiRequest, res: NextApiResponse) {
-    logger.info('GET /api/services/openvpn/hosts');
+    logger.info('GET /api/services/jupyterhub/hosts');
 
     try {
-        const host = await getOpenVPNHosts();
+        const host = await getJupyterHubHosts();
         return res.json(host);
     } catch (error: any) {
         return res.status(500).json({ error: error.message });
