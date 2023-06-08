@@ -89,13 +89,13 @@ if (process.env.NODE_ENV === 'development') {
             base: '../ansible/ansible-openvpn/',
             playbooks: '../ansible/ansible-openvpn/playbooks/',
             hosts: '../ansible/ansible-openvpn/inventories/cassiopee/hosts.ini',
-            sshKey: '../ansible/keys/openvpn_key'
+            sshKey: '../ansible/keys/openvpn_key_unsecure'
         },
         jupyterhub: {
             base: '../ansible/ansible-jupyterhub/',
             playbooks: '../ansible/ansible-jupyterhub/playbooks/',
             hosts: '../ansible/ansible-jupyterhub/inventories/cassiopee/hosts.ini',
-            sshKey: '../ansible/keys/jupyterhub_key',
+            sshKey: '../ansible/keys/jupyterhub_key_unsecure',
             host_vars: '../ansible/ansible-jupyterhub/inventories/cassiopee/host_vars/'
         }
     };
@@ -105,13 +105,13 @@ if (process.env.NODE_ENV === 'development') {
             base: '/etc/ansible/ansible-openvpn/',
             playbooks: '/etc/ansible/ansible-openvpn/playbooks/',
             hosts: '/etc/ansible/ansible-openvpn/inventories/cassiopee/hosts.ini',
-            sshKey: '/etc/ansible/keys/openvpn_key'
+            sshKey: '/etc/ansible/keys/openvpn_key_unsecure'
         },
         jupyterhub: {
             base: '/etc/ansible/ansible-jupyterhub/',
             playbooks: '/etc/ansible/ansible-jupyterhub/playbooks/',
             hosts: '/etc/ansible/ansible-jupyterhub/inventories/cassiopee/hosts.ini',
-            sshKey: '/etc/ansible/keys/jupyterhub_key',
+            sshKey: '/etc/ansible/keys/jupyterhub_key_unsecure',
             host_vars: '/etc/ansible/ansible-jupyterhub/inventories/cassiopee/host_vars/'
         }
     };
