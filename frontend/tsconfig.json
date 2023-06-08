@@ -18,6 +18,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "experimentalDecorators": true,
     "paths": {
       "@/*": [
         "./src/*"
@@ -27,7 +28,8 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "next.config.js"
   ],
   "exclude": [
     "node_modules"
