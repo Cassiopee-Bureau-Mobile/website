@@ -35,7 +35,11 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
     try {
         const result = hostVarsSchema.safeParse(req.body);
 
-        await setOpenVPNHosts(result);
+        if (!result.success) {
+            return res.status(400).json({ error: result.error });
+        }
+
+        await setOpenVPNHosts(result.data);
 
         return res.json({ message: 'OpenVPN hosts file written' });
     } catch (error: any) {

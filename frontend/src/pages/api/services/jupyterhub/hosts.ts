@@ -1,12 +1,14 @@
-// Path: src/pages/api/services/openvpn/ssh-key.ts
+// Path: src/pages/api/services/jupyterhub/hosts.ts
 import { logger } from '@/lib/logger';
 import { verify } from '@/utils/auth';
-import { getOpenVPNSSHKey, setOpenVPNSSHKey } from '@/utils/executor';
+import { getJupyterHubHosts, setJupyterHubHosts } from '@/utils/executor';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { z } from 'zod';
 
-const keySchema = z.object({
-    ssh_key: z.string()
+const hostVarsSchema = z.object({
+    ansible_host: z.string().ip(),
+    ansible_user: z.string(),
+    ansible_sudo_pass: z.string()
 });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -26,32 +28,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 }
 
-// POST write OpenVPN ssh key
+// POST write jupyterhub host file
 export async function POST(req: NextApiRequest, res: NextApiResponse) {
-    logger.info('POST /api/services/openvpn/ssh-key');
+    logger.info('POST /api/services/jupyterhub/hosts');
 
     try {
-        const result = keySchema.safeParse(req.body);
+        const result = hostVarsSchema.safeParse(req.body);
 
         if (!result.success) {
             return res.status(400).json({ error: result.error });
         }
 
-        await setOpenVPNSSHKey(result.data);
+        await setJupyterHubHosts(result.data);
 
-        return res.json({ message: 'OpenVPN ssh key file written' });
+        return res.json({ message: 'JupyterHub hosts file written' });
     } catch (error: any) {
         return res.status(500).json({ error: error.message });
     }
 }
 
-// GET get openvpn ssh key
+// GET infos of the jupyterhub host file
 async function GET(req: NextApiRequest, res: NextApiResponse) {
-    logger.info('GET /api/services/openvpn/ssh-key');
+    logger.info('GET /api/services/jupyterhub/hosts');
 
     try {
-        const ssh_key = await getOpenVPNSSHKey();
-        return res.json(ssh_key);
+        const host = await getJupyterHubHosts();
+        return res.json(host);
     } catch (error: any) {
         return res.status(500).json({ error: error.message });
     }

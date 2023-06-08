@@ -1,7 +1,7 @@
-// Path: src/pages/api/services/openvpn/ssh-key.ts
+// Path: src/pages/api/services/jupyterhub/ssh-key.ts
 import { logger } from '@/lib/logger';
 import { verify } from '@/utils/auth';
-import { getOpenVPNSSHKey, setOpenVPNSSHKey } from '@/utils/executor';
+import { getJupyterHubSSHKey, setJupyterHubSSHKey } from '@/utils/executor';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { z } from 'zod';
 
@@ -21,14 +21,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         case 'POST':
             return POST(req, res);
         default:
-            res.setHeader('Allow', ['POST', 'GET']);
+            res.setHeader('Allow', ['GET', 'POST']);
             return res.status(405).json({ error: 'Method not allowed' });
     }
 }
 
-// POST write OpenVPN ssh key
+// POST write jupyterhub ssh key
 export async function POST(req: NextApiRequest, res: NextApiResponse) {
-    logger.info('POST /api/services/openvpn/ssh-key');
+    logger.info('POST /api/services/jupyterhub/ssh-key');
 
     try {
         const result = keySchema.safeParse(req.body);
@@ -37,20 +37,20 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
             return res.status(400).json({ error: result.error });
         }
 
-        await setOpenVPNSSHKey(result.data);
+        await setJupyterHubSSHKey(result.data);
 
-        return res.json({ message: 'OpenVPN ssh key file written' });
+        return res.json({ message: 'JupyterHub ssh key file written' });
     } catch (error: any) {
         return res.status(500).json({ error: error.message });
     }
 }
 
-// GET get openvpn ssh key
+// GET get juptyerhub ssh key
 async function GET(req: NextApiRequest, res: NextApiResponse) {
-    logger.info('GET /api/services/openvpn/ssh-key');
+    logger.info('GET /api/services/jupyterhub/ssh-key');
 
     try {
-        const ssh_key = await getOpenVPNSSHKey();
+        const ssh_key = await getJupyterHubSSHKey();
         return res.json(ssh_key);
     } catch (error: any) {
         return res.status(500).json({ error: error.message });
