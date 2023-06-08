@@ -1,0 +1,26 @@
+version: "3"
+
+name: cassiopee_development
+
+services:
+  reverse-proxy:
+    build:
+      args:
+        - host_arg=safeofficeanywhere.dev
+    volumes:
+      - ./reverse-proxy/ssl:/etc/nginx/ssl
+
+  frontend:
+    build:
+      args:
+        - next_public_base_url=https://safeofficeanywhere.dev
+    environment:
+      - NEXTAUTH_URL=https://safeofficeanywhere.dev
+    ports:
+      - 8300:3000
+    volumes:
+      - ../ansible:/etc/ansible
+
+  database:
+    ports:
+      - 25432:5432
