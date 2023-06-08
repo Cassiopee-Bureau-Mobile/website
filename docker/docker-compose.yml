@@ -36,7 +36,7 @@ services:
       - EMAIL_CLIENT_ID=${EMAIL_CLIENT_ID}
       - EMAIL_CLIENT_SECRET=${EMAIL_CLIENT_SECRET}
       - EMAIL_PASSWORD=${EMAIL_PASSWORD}
-      - DATABASE_URL=postgress://cassiopee:${POSTGRES_PASSWORD}@cassiopee-db:5432/cassiopee
+      - DATABASE_URL=postgres://cassiopee:${POSTGRES_PASSWORD}@cassiopee-db:5432/cassiopee
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
 
   database:

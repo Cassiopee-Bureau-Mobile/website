@@ -1,7 +1,7 @@
 import ky, { Options } from 'ky';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { apiRoutes, apiUrl, queryKeys } from './constants';
-import { sideMenu } from '@/data/sidemenu';
+import { sideMenu } from '@/pages/api/sidemenu';
 import { ServiceType, User } from '@prisma/client';
 import { HttpMethod } from 'ky/distribution/types/options';
 import { LiteralUnion, useSession } from 'next-auth/react';
