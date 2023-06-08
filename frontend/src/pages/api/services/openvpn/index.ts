@@ -1,5 +1,6 @@
 // Path: src/app/pages/services/openvpn/index.ts
 import { logger } from '@/lib/logger';
+import prisma from '@/lib/prisma';
 import { verify } from '@/utils/auth';
 import { getOpenVPNStatus, restartOpenVPN } from '@/utils/executor';
 
@@ -25,6 +26,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 // GET openvpn status
 async function GET(req: NextApiRequest, res: NextApiResponse) {
     logger.info('GET /api/services/openvpn');
+
+    const service = await prisma.openVPNService.findFirst({
+        select: {
+            installed: true
+        }
+    });
+
+    if (!service?.installed) {
+        return res.json({ message: 'down' });
+    }
+
     try {
         const message = await getOpenVPNStatus();
         return res.json({ message });
