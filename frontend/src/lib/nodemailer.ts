@@ -1,6 +1,7 @@
 import { baseUrl, pages } from '@/utils/constants';
 import nodemailer from 'nodemailer';
 import { logger } from '@/lib/logger';
+import { saveLog } from './saveLog';
 
 const createTransporter = async () => {
     const transporter = nodemailer.createTransport({
@@ -20,6 +21,18 @@ const createTransporter = async () => {
 
 export async function sendEmail(to: string, subject: string, html: string) {
     logger.info(`Sending email to ${to} with subject "${subject}"`);
+
+    if (process.env.EMAIL_USER === undefined || process.env.EMAIL_PASSWORD === undefined) {
+        logger.warn('Email not sent. Email credentials not set.');
+        const email = {
+            from: `Noreply SafeOfficeAnywhere <>`,
+            to,
+            subject,
+            html
+        };
+        saveLog(JSON.stringify(email), 'email');
+        return;
+    }
     const transporter = await createTransporter();
     await transporter.sendMail({
         from: `Noreply SafeOfficeAnywhere <${process.env.EMAIL_USER}>`,
