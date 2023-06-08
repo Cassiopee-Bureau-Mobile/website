@@ -23,10 +23,6 @@ export default function SSHKeyCard({ type }: SSHKeyCardProps): JSX.Element {
 
     const [isOpen, setIsOpen] = useState(false);
 
-    // const sshKeyVars: SSHKey = {
-    //     ssh_key: ansible_ssh_key_ref.current?.value || data?.ssh_key || ''
-    // };
-
     useEffect(() => {
         setSSHKeyVars({
             ssh_key: data?.ssh_key || ''
