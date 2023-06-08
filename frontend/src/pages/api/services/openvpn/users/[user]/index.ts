@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 // GET user openvpn config
 async function GET(req: NextApiRequest, res: NextApiResponse) {
     const user = await extractUserFromRequest(req, res);
-    logger.info('GET /api/services/openvpn/users/[user]', user);
+    logger.info(`GET /api/services/openvpn/users/${req.query.user}`);
 
     if (!user) {
         return res.status(400).json({ error: 'Invalid user' });
