@@ -32,7 +32,19 @@ To send emails, you need to have a gmail account well configured.
 
 ```bash
 $ git clone https://github.com/Cassiopee-Bureau-Mobile/website --recurse-submodules
-$ cd website/docker
+```
+
+Then you need to update the ansible submodule to the latest version.
+
+```bash
+$ cd website
+$ git submodule update --remote --merge
+```
+
+Then you need to create a .env file in the docker folder.
+
+```bash
+$ cd docker
 $ nano .env
 ```
 
@@ -77,15 +89,117 @@ Try those with sudo if you got a permission error, especially for the `docker ex
 ```bash
 $ docker exec -it cassiopee-frontend /bin/sh
 $ npm run deploy
-```
-
-```bash
-$ docker exec -it cassiopee-frontend bash
 $ ./node_modules/.bin/ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/prod-seed.ts admin-password-to-change
 ```
+
+The first command will open a shell inside the container.
+The second command will deploy the database.
+The third command will seed the database with the admin user. **You need to change the password**.
 
 # Debug
 
 ## Logs
 
 You can view the logs of ansible inside the `logs` folder.
+
+# Development
+
+## Requirements
+
+### Software
+
+- [Docker](https://docs.docker.com/engine/install/)
+- Ansible
+
+## Configuration
+
+```bash
+$ git clone https://github.com/Cassiopee-Bureau-Mobile/website --recurse-submodules
+```
+
+Then you need to update the ansible submodule to the latest version.
+
+```bash
+$ cd website
+$ git submodule update --remote --merge
+```
+
+Then you need to create a .env file in the docker folder and in the frontend folder.
+
+```bash
+$ cd docker
+$ nano .env
+```
+
+You need to fill the .env file with the following information:
+
+```
+#Secrets
+POSTGRES_PASSWORD=your_password (you can generate it with openssl rand -hex 32)
+NEXTAUTH_SECRET=your_secret (you can generate it with openssl rand -hex 32)
+```
+
+If you want you can add the following information:
+
+```
+# Email
+EMAIL_USER=
+EMAIL_CLIENT_ID=
+EMAIL_CLIENT_SECRET=
+EMAIL_PASSWORD=
+```
+
+But it's not necessary, you will be juste be warn that you can't send email and the email will be saved in the logs folder under the folder `email`.
+
+## SSL
+
+You will need to follow the instrcutions inside [Readme-SSL](docker/reverse-proxy/ssl/README.md) to setup your computer to use own signed certificates.
+
+## Start the development environment
+
+You can start the development environment with the following command:
+
+```bash
+$ ./DeployDocker.sh
+```
+
+In case you need to reset the database, simply do :
+
+```bash
+$ cd frontend
+$ npm run reset-db
+```
+
+To monitor the database, you can use the following command:
+
+```bash
+$ cd frontend
+$ npx prisma studio
+```
+
+Follow [Readme-Frontend](frontend/README.md) to have more information about the frontend.
+
+## Test the application
+
+Only a few tests have been written for the moment, but you can run them with the following command:
+
+```bash
+$ cd frontend
+$ npm run test
+```
+
+## Code quality
+
+You can run the linter with the following command:
+
+```bash
+$ cd frontend
+$ npm run lint
+```
+
+You can run the formatter with the following command:
+
+```bash
+$ cd frontend
+$ npm run format
+```
