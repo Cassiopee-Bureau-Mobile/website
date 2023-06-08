@@ -31,7 +31,7 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
     logger.info('POST /api/services/jupyterhub/ssh-key');
 
     try {
-        const result = keySchema.safeParse(JSON.parse(req.body));
+        const result = keySchema.safeParse(req.body);
 
         if (!result.success) {
             return res.status(400).json({ error: result.error });

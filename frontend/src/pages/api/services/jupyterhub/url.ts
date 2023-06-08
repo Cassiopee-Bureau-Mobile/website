@@ -29,7 +29,7 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
     logger.info('POST /api/services/jupyterhub/url');
 
     try {
-        const result = urlSchema.safeParse(JSON.parse(req.body));
+        const result = urlSchema.safeParse(req.body);
 
         if (!result.success) {
             return res.status(400).json({ error: result.error });

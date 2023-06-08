@@ -26,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 }
 
 // POST restart jupyterhub service
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
+async function POST(req: NextApiRequest, res: NextApiResponse) {
     logger.info('POST /api/services/jupyterhub');
     try {
         await verify(req, res, 'ADMIN');
