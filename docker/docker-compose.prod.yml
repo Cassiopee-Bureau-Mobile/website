@@ -4,6 +4,7 @@ name: cassiopee_prodution
 
 services:
   reverse-proxy:
+    restart: always
     build:
       args:
         - host_arg=${HOST}
@@ -13,6 +14,7 @@ services:
       - ./ssl/${HOST}.key:/etc/nginx/ssl/${HOST}.key
 
   frontend:
+    restart: always
     build:
       args:
         - next_public_base_url=https://${HOST}
@@ -26,5 +28,6 @@ services:
       - ../logs:/logs
 
   database:
+    restart: always
     expose:
       - 5432
