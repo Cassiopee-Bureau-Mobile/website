@@ -3,7 +3,7 @@
 
 import { NotFoundError, extractHostLine } from '@/utils/utils';
 import { exec } from '@/lib/exec';
-import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { chmod, chmodSync, copyFile, copyFileSync, existsSync, readFileSync, writeFileSync } from 'fs';
 import { ansiblePath } from '@/utils/constants';
 import { getJupyterHubIP, getOpenVPNIp } from './queries';
 import prisma from '@/lib/prisma';
@@ -227,6 +227,10 @@ export async function getOpenVPNSSHKey(): Promise<SSHKey> {
 
 export async function setOpenVPNSSHKey(key: SSHKey): Promise<void> {
     writeFileSync(ansiblePath.openvpn.sshKey, key.ssh_key);
+
+    // Update SSH key without the unsecure
+    copyFileSync(ansiblePath.openvpn.sshKey, ansiblePath.openvpn.sshKey.replace('_unsecure', ''));
+    chmodSync(ansiblePath.openvpn.sshKey.replace('_unsecure', ''), '600');
 }
 
 export async function getJupyterHubSSHKey(): Promise<SSHKey> {
@@ -240,6 +244,10 @@ export async function getJupyterHubSSHKey(): Promise<SSHKey> {
 
 export async function setJupyterHubSSHKey(key: SSHKey): Promise<void> {
     writeFileSync(ansiblePath.jupyterhub.sshKey, key.ssh_key);
+
+    // Update SSH key without the unsecure
+    copyFileSync(ansiblePath.jupyterhub.sshKey, ansiblePath.jupyterhub.sshKey.replace('_unsecure', ''));
+    chmodSync(ansiblePath.jupyterhub.sshKey.replace('_unsecure', ''), '600');
 }
 
 //#endregion
