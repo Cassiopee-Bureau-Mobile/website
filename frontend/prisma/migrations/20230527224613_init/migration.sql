@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "ServiceRegistration" ADD COLUMN     "installedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
