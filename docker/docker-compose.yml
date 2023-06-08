@@ -1,0 +1,48 @@
+version: "3"
+
+name: cassiopee_template
+
+services:
+  reverse-proxy:
+    build:
+      context: .
+      dockerfile: ./reverse-proxy/Dockerfile
+    ports:
+      - 80:80
+      - 443:443
+    container_name: cassiopee-reverse-proxy
+    depends_on:
+      - frontend
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: ./docker/frontend/Dockerfile
+    container_name: cassiopee-frontend
+    command:
+      [
+        "pm2-runtime",
+        "start",
+        "npm",
+        "--name",
+        "cassiopee-frontend",
+        "--",
+        "start"
+      ]
+    depends_on:
+      - database
+    environment:
+      - EMAIL_USER=${EMAIL_USER}
+      - EMAIL_CLIENT_ID=${EMAIL_CLIENT_ID}
+      - EMAIL_CLIENT_SECRET=${EMAIL_CLIENT_SECRET}
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - DATABASE_URL=postgress://cassiopee:${POSTGRES_PASSWORD}@cassiopee-db:5432/cassiopee
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+
+  database:
+    image: postgres:14.5-alpine
+    container_name: cassiopee-db
+    environment:
+      - POSTGRES_USER=cassiopee
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=cassiopee

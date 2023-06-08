@@ -1,0 +1,8 @@
+frontend/.next/*
+frontend/.vscode/*
+frontend/node_modules/*
+docker/*
+.git/*
+DeployDocker.sh
+frontend/.env
+logs/*
