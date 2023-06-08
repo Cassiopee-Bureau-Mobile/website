@@ -1,0 +1,117 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                 String    @id @default(cuid())
+  userId             String
+  providerType       String
+  providerId         String
+  providerAccountId  String
+  refreshToken       String?
+  accessToken        String?
+  accessTokenExpires DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  user               User      @relation(fields: [userId], references: [id])
+
+  @@unique([providerId, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken  String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+  USER
+  INACTIVE
+}
+
+model User {
+  id                       String                    @id @default(cuid())
+  role                     Role                      @default(INACTIVE)
+  username                 String                    @unique
+  email                    String                    @unique
+  emailVerified            DateTime?
+  password                 String?
+  createdAt                DateTime                  @default(now())
+  updatedAt                DateTime                  @updatedAt
+  accounts                 Account[]
+  sessions                 Session[]
+  profile                  Profile?
+  passwordResetToken       PasswordResetToken?
+  emailVerificationRequest EmailVerificationRequest?
+
+  @@unique([email, username])
+}
+
+model Profile {
+  user                User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId              String                @unique
+  firstName           String
+  lastName            String
+  serviceRegistration ServiceRegistration[]
+}
+
+model ServiceRegistration {
+  id                  String             @id @default(cuid())
+  name                ServiceType
+  installedAt         DateTime           @default(now())
+  profile             Profile            @relation(fields: [profileUserId], references: [userId])
+  profileUserId       String
+  JupyterHubService   JupyterHubService? @relation(fields: [jupyterHubServiceId], references: [id])
+  jupyterHubServiceId String?
+  OpenVPNService      OpenVPNService?    @relation(fields: [openVPNServiceId], references: [id])
+  openVPNServiceId    String?
+}
+
+enum ServiceType {
+  JUPYTERHUB
+  OPENVPN
+}
+
+model EmailVerificationRequest {
+  user   User   @relation(fields: [userId], references: [email], onDelete: Cascade)
+  userId String @unique
+  token  String @unique
+}
+
+model PasswordResetToken {
+  user    User     @relation(fields: [userId], references: [email], onDelete: Cascade)
+  userId  String   @unique
+  token   String   @unique
+  expires DateTime
+
+  @@unique([userId, token])
+}
+
+model JupyterHubService {
+  id                  String                @id @default(cuid())
+  name                String                @unique
+  installed           Boolean               @default(false)
+  serviceRegistration ServiceRegistration[]
+  token               String?               @unique
+  url                 String?               @unique
+  ip                  String?               @unique
+}
+
+model OpenVPNService {
+  id                  String                @id @default(cuid())
+  name                String                @unique
+  installed           Boolean               @default(false)
+  serviceRegistration ServiceRegistration[]
+  ip                  String?               @unique
+}
