@@ -151,9 +151,16 @@ EMAIL_PASSWORD=
 
 But it's not necessary, you will be juste be warn that you can't send email and the email will be saved in the logs folder under the folder `email`.
 
+Then copy the .env file in the frontend folder.
+
+```bash
+$ cp .env ../frontend
+```
+
 ## SSL
 
 You will need to follow the instrcutions inside [Readme-SSL](docker/reverse-proxy/ssl/README.md) to setup your computer to use own signed certificates.
+You will find the deployed development website under the domain `safeofficeanywhere.dev`.
 
 ## Start the development environment
 
