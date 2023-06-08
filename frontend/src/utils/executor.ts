@@ -3,7 +3,7 @@
 
 import { NotFoundError, extractHostLine } from '@/utils/utils';
 import { exec } from '@/lib/exec';
-import { readFileSync, writeFileSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { ansiblePath } from '@/utils/constants';
 import { getJupyterHubIP, getOpenVPNIp } from './queries';
 import prisma from '@/lib/prisma';
@@ -217,6 +217,9 @@ export async function setJupyterHubHosts(hosts: HostVars): Promise<void> {
 //#region SSH Keys
 
 export async function getOpenVPNSSHKey(): Promise<SSHKey> {
+    if (!existsSync(ansiblePath.openvpn.sshKey)) {
+        return { ssh_key: '' };
+    }
     const file = readFileSync(ansiblePath.openvpn.sshKey, 'utf8');
 
     return { ssh_key: file };
@@ -227,6 +230,9 @@ export async function setOpenVPNSSHKey(key: SSHKey): Promise<void> {
 }
 
 export async function getJupyterHubSSHKey(): Promise<SSHKey> {
+    if (!existsSync(ansiblePath.jupyterhub.sshKey)) {
+        return { ssh_key: '' };
+    }
     const file = readFileSync(ansiblePath.jupyterhub.sshKey, 'utf8');
 
     return { ssh_key: file };

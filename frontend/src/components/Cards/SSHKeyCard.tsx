@@ -1,7 +1,6 @@
 import { useHost, usePostHost, usePostSSHKey, useSSHKey } from '@/utils/fetchClient';
 import { Card } from '@/components/Card';
-import Skeleton from '@/components/Skeleton';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/Button';
 import { Popup } from '@/components/Popup';
 import { logger } from '@/lib/logger';
@@ -18,22 +17,33 @@ export default function SSHKeyCard({ type }: SSHKeyCardProps): JSX.Element {
     const mutation = usePostSSHKey(type);
 
     const ansible_ssh_key_ref = useRef<HTMLTextAreaElement>(null);
+    const [sshKeyVars, setSSHKeyVars] = useState<SSHKey>({
+        ssh_key: data?.ssh_key || ''
+    });
 
     const [isOpen, setIsOpen] = useState(false);
 
-    const sshKeyVars: SSHKey = {
-        ssh_key: ansible_ssh_key_ref.current?.value || data?.ssh_key || ''
-    };
+    // const sshKeyVars: SSHKey = {
+    //     ssh_key: ansible_ssh_key_ref.current?.value || data?.ssh_key || ''
+    // };
 
-    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    useEffect(() => {
+        setSSHKeyVars({
+            ssh_key: data?.ssh_key || ''
+        });
+    }, [data]);
 
+    useEffect(() => {
         if (sshKeyVars.ssh_key.match(regex)) {
             ansible_ssh_key_ref.current?.setCustomValidity('');
-            setIsOpen(true);
         } else {
             ansible_ssh_key_ref.current?.setCustomValidity("La clé SSH n'est pas valide");
         }
+    }, [sshKeyVars]);
+
+    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setIsOpen(true);
     };
 
     const onValidate = () => {
@@ -86,21 +96,15 @@ export default function SSHKeyCard({ type }: SSHKeyCardProps): JSX.Element {
                                     className='font-mono font-bold'>
                                     SSH_KEY :
                                 </label>
-                                {data === undefined ? (
-                                    <Skeleton
-                                        className='inline-block w-64'
-                                        id='ansible_ssh_key'
-                                    />
-                                ) : (
-                                    <textarea
-                                        ref={ansible_ssh_key_ref}
-                                        id='ansible_ssh_key'
-                                        required
-                                        name='ansible_ssh_key'
-                                        className='input min-h-[10rem] grow'
-                                        defaultValue={data.ssh_key}
-                                    />
-                                )}
+                                <textarea
+                                    ref={ansible_ssh_key_ref}
+                                    id='ansible_ssh_key'
+                                    required
+                                    name='ansible_ssh_key'
+                                    className='input min-h-[10rem] grow'
+                                    value={sshKeyVars.ssh_key}
+                                    onChange={(e) => setSSHKeyVars({ ...sshKeyVars, ssh_key: e.target.value })}
+                                />
                             </div>
                         </div>
                         <div>
