@@ -33,8 +33,7 @@ const NumberOfTasks = 36;
 export async function POST(req: NextApiRequest, res: NextApiResponse) {
     logger.info('POST /api/services/openvpn/users');
     //Get user from request body
-    const body = await req.body;
-    const result = userSchema.safeParse(JSON.parse(body));
+    const result = userSchema.safeParse(req.body);
 
     if (!result.success) {
         return res.status(400).json({ error: 'Missing user' });
@@ -60,7 +59,7 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
 
     try {
         const interval = initInterval(res, () => {
-            sendSSEPercentage(res, count, 1);
+            sendSSEPercentage(res, count, NumberOfTasks);
         });
 
         await addOpenVPNClient(user, (data: string) => {
@@ -72,13 +71,11 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
 
         await prisma.serviceRegistration.create({
             data: {
-                name: 'OPENVPN',
+                name: ServiceType.OPENVPN,
                 profileUserId: await prisma.user.findFirstOrThrow({ where: { username: user } }).then((user) => user.id),
                 openVPNServiceId: await prisma.openVPNService.findFirstOrThrow().then((service) => service.id)
             }
         });
-
-        logger.info(`User ${user} added to OpenVPN`);
 
         sendSSEEnd(res, `User ${user} added`, interval);
     } catch (error: any) {

@@ -33,7 +33,7 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
     logger.info('POST /api/services/openvpn/hosts');
 
     try {
-        const result = hostVarsSchema.parse(JSON.parse(req.body));
+        const result = hostVarsSchema.safeParse(req.body);
 
         await setOpenVPNHosts(result);
 

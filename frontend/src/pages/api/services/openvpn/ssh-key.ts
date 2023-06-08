@@ -31,7 +31,7 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
     logger.info('POST /api/services/openvpn/ssh-key');
 
     try {
-        const result = keySchema.parse(JSON.parse(req.body));
+        const result = keySchema.safeParse(req.body);
 
         await setOpenVPNSSHKey(result);
 
