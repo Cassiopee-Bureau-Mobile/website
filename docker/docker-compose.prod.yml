@@ -22,8 +22,8 @@ services:
     expose:
       - 3000
     volumes:
-      - ./ansible:/etc/ansible
-      - ./logs:/logs
+      - ../ansible:/etc/ansible
+      - ../logs:/logs
 
   database:
     expose:
