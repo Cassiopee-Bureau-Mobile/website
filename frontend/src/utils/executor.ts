@@ -226,6 +226,9 @@ export async function getOpenVPNSSHKey(): Promise<SSHKey> {
 }
 
 export async function setOpenVPNSSHKey(key: SSHKey): Promise<void> {
+    if (!key.ssh_key.endsWith('\n')) {
+        key.ssh_key += '\n';
+    }
     writeFileSync(ansiblePath.openvpn.sshKey, key.ssh_key);
 
     // Update SSH key without the unsecure
@@ -243,6 +246,10 @@ export async function getJupyterHubSSHKey(): Promise<SSHKey> {
 }
 
 export async function setJupyterHubSSHKey(key: SSHKey): Promise<void> {
+    // Check if the content as an ending line break
+    if (!key.ssh_key.endsWith('\n')) {
+        key.ssh_key += '\n';
+    }
     writeFileSync(ansiblePath.jupyterhub.sshKey, key.ssh_key);
 
     // Update SSH key without the unsecure
