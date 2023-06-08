@@ -7,7 +7,7 @@ interface SkeletonProps {
 
 export default function Skeleton(props: SkeletonProps): JSX.Element {
     return (
-        <div
+        <span
             style={{
                 width: props.width,
                 height: props.height
@@ -20,6 +20,6 @@ export default function Skeleton(props: SkeletonProps): JSX.Element {
             ) : (
                 <></>
             )}
-        </div>
+        </span>
     );
 }
