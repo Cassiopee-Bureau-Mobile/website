@@ -1,10 +1,12 @@
 # Installation
 
-## Docker
-
-To deploy the application, you need to have docker installed on your machine.
-
 ## Requirements
+
+### Software
+
+- [Docker](https://docs.docker.com/engine/install/)
+- Git
+- Python3
 
 ### Email
 
@@ -29,7 +31,7 @@ To send emails, you need to have a gmail account well configured.
 ## Configuration
 
 ```bash
-$ git clone https://github.com/Cassiopee-Bureau-Mobile/website
+$ git clone https://github.com/Cassiopee-Bureau-Mobile/website --recurse-submodules
 $ cd website/docker
 $ nano .env
 ```
@@ -61,16 +63,19 @@ You need to generate a certificate and a key and put them in the `docker/ssl` fo
 
 ## Deploy
 
+Try those with sudo if you got a permission error.
+
 ```bash
-$ cd docker
 $ docker compose -f docker-compose.yml -f docker-compose.prod.yml build
 $ docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 ```
 
 ## Setup the database
 
+Try those with sudo if you got a permission error, especially for the `docker exec` commands.
+
 ```bash
-$ docker exec -it cassiopee-frontend bash
+$ docker exec -it cassiopee-frontend /bin/sh
 $ npm run deploy
 ```
 
