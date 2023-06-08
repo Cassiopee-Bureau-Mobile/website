@@ -1,0 +1,30 @@
+version: "3"
+
+name: cassiopee_prodution
+
+services:
+  reverse-proxy:
+    build:
+      args:
+        - host_arg=${HOST}
+    # image: ghcr.io/cassiopee-bureau-mobile/cassiopee-reverse-proxy:${tag:-latest}
+    volumes:
+      - ./ssl/${HOST}.crt:/etc/nginx/ssl/${HOST}.crt
+      - ./ssl/${HOST}.key:/etc/nginx/ssl/${HOST}.key
+
+  frontend:
+    build:
+      args:
+        - next_public_base_url=https://${HOST}
+    # image: ghcr.io/cassiopee-bureau-mobile/cassiopee-frontend:${tag:-latest}
+    environment:
+      - NEXTAUTH_URL=https://${HOST}
+    expose:
+      - 3000
+    volumes:
+      - ./ansible:/etc/ansible
+      - ./logs:/logs
+
+  database:
+    expose:
+      - 5432
