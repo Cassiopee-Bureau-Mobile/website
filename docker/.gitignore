@@ -1,0 +1,6 @@
+*.env
+*.sh
+*.csr
+*.ca.key
+/ssl/*
+!/ssl/.gitkeep
