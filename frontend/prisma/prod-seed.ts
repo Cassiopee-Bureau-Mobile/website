@@ -7,6 +7,11 @@ if (!password) {
     process.exit(1);
 }
 
+if (password === 'ADMIN-PASSWORD-TO-CHANGE') {
+    console.error('Please change the default password');
+    process.exit(1);
+}
+
 const prisma = new PrismaClient();
 
 const userData: Prisma.UserCreateInput[] = [
