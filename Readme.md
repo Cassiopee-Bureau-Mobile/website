@@ -12,16 +12,17 @@
 
 To send emails, you need to have a gmail account well configured.
 
-- You need to have a gmail account with a email as `EMAIL_USER` in the .env file.
+- You need to have a gmail account. The email will be used as `EMAIL_USER` in the .env file.
+
 - Create a gmail project on the [google cloud platform](https://console.cloud.google.com/).
-  - You can follow this [tutorial](https://docs.emailengine.app/setting-up-gmail-oauth2-for-imap-api) to configure your gmail account up to the part where I goes to the _Email Engine_ website.
-  - Details:
-    - You need to create a project on the [google cloud platform](https://console.cloud.google.com/).
-    - Go to APIs & Services > Credentials. (You will need to create a project if you don't have one)
-    - Then, you need to create an OAuth 2.0 Client ID.
-    - Get your Client ID, `EMAIL_CLIENT_ID` in the .env file.
-    - Get your Client Secret, `EMAIL_CLIENT_SECRET` in the .env file.
-- You need to get an app password.
+  - You can follow this [tutorial](https://docs.emailengine.app/setting-up-gmail-oauth2-for-imap-api) to configure your gmail account up to the part where it switches to the _Email Engine_ website.
+    - Details:
+      - You need to create a project on the [google cloud platform](https://console.cloud.google.com/).
+      - Go to APIs & Services > Credentials. (You will need to create a project if you don't have one)
+      - Then, you need to create an OAuth 2.0 Client ID.
+      - Get your Client ID, `EMAIL_CLIENT_ID` in the .env file.
+      - Get your Client Secret, `EMAIL_CLIENT_SECRET` in the .env file.
+- Then you need to get an app password.
   - For this, you need to go to your [google account settings](https://myaccount.google.com/).
   - Then, you need to go to the security tab.
   - Activate the two-step verification.
@@ -68,19 +69,19 @@ EMAIL_PASSWORD=
 ## SSL
 
 You will need to have a SSL certificate to deploy the application.
-You need to generate a certificate and a key and put them in the `docker/ssl` folder, with the name:
+You need to generate a certificate and a key for your website (for example `example.com`) and put them in the `docker/ssl` folder, with the name:
 
-- example.crt
-- example.key
+- `example.com.crt`
+- `example.com.key`
 
 ## Deploy
-
-Try those with sudo if you got a permission error.
 
 ```bash
 $ docker compose -f docker-compose.yml -f docker-compose.prod.yml build
 $ docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 ```
+
+Try those with sudo if you got a permission error.
 
 ## Setup the database
 
@@ -89,7 +90,7 @@ Try those with sudo if you got a permission error, especially for the `docker ex
 ```bash
 $ docker exec -it cassiopee-frontend /bin/sh
 $ npm run deploy
-$ ./node_modules/.bin/ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/prod-seed.ts admin-password-to-change
+$ ./node_modules/.bin/ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/prod-seed.ts ADMIN-PASSWORD-TO-CHANGE
 ```
 
 The first command will open a shell inside the container.
