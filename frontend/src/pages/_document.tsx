@@ -5,7 +5,12 @@ export default function Document() {
         <Html
             lang='fr'
             className='scroll-smooth'>
-            <Head />
+            <Head>
+                <link
+                    rel='icon'
+                    href='/favicon.png'
+                />
+            </Head>
             <body className='bg-slate-50'>
                 <Main />
                 <NextScript />
